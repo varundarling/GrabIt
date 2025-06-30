@@ -1,6 +1,7 @@
 package com.varun.grabit
 
-import android.graphics.Paint
+import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,22 +24,26 @@ class ItemAdapter(
         private val textPrice: TextView = itemView.findViewById(R.id.textPrice)
         private val buttonDelete: ImageButton = itemView.findViewById(R.id.buttonDelete)
 
+        @SuppressLint("SetTextI18n", "DefaultLocale")
         fun bind(item: Items, position: Int) {
             textItemName.text = item.name
             textQuantity.text = "Quantity: ${item.quantity}"
-            textPrice.text = String.format("$%.2f", item.price)
-            checkBox.isChecked = item.isChecked
+            textPrice.text = String.format("%.2f", item.price)
 
-            if (item.isChecked) {
-                textItemName.paintFlags = textItemName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            } else {
-                textItemName.paintFlags = textItemName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            }
-
+            // Clear previous listener to prevent overlap
             checkBox.setOnCheckedChangeListener(null)
+            // Set checkbox state first for immediate UI response
+            checkBox.isChecked = item.isChecked
+            checkBox.isEnabled = true
+            // Set listener before updating state
             checkBox.setOnCheckedChangeListener { _, isChecked ->
+                Log.d("ItemAdapter", "Checkbox for ${item.name} at position $position changed to $isChecked")
+                checkBox.isEnabled = false
                 onItemChecked(item, position, isChecked)
+                checkBox.postDelayed({ checkBox.isEnabled = true }, 1000)
             }
+            // Set checkbox state after listener to avoid resetting user input
+            checkBox.isChecked = item.isChecked
 
             buttonDelete.setOnClickListener {
                 onItemDeleted(item, position)

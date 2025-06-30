@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:adUnitId="ca-app-pub-7339218345159620/6637267327"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,6 +54,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+    <TextView
+        android:id="@+id/noItemsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_items_added"
+        android:textSize="18sp"
+        android:textColor="?attr/colorPrimary"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerView"
+        app:layout_constraintEnd_toEndOf="@id/recyclerView"
+        app:layout_constraintStart_toStartOf="@id/recyclerView"
+        app:layout_constraintTop_toTopOf="@id/recyclerView" />
+
     <!-- Total Amount Bar -->
     <LinearLayout
         android:id="@+id/totalLayout"
@@ -68,16 +82,18 @@
             android:id="@+id/totalLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Total Amount:"
-            android:textSize="18sp" />
+            android:layout_weight="4"
+            android:text="@string/total_amount"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/totalAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.00"
-            android:textSize="18sp" />
+            android:text="@string/_0_00"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <!-- Floating Action Button for Adding Items -->
@@ -88,6 +104,7 @@
         android:layout_margin="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:contentDescription="@string/add_item"
         android:src="@android:drawable/ic_menu_add"
         app:layout_constraintBottom_toTopOf="@+id/totalLayout"
         app:layout_constraintEnd_toEndOf="parent" />
