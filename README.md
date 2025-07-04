@@ -27,7 +27,7 @@ Open the app and start creating your shopping list!
 
 Via GitHub (For Developers or Manual Installation):
 
-Clone or download this repository:git clone https://github.com/yourusername/GrabIt.git
+Clone or download this repository:git clone [https://github.com/yourusername/GrabIt.git](https://github.com/varundarling/GrabIt.git)
 
 or download the ZIP file from the repository page and extract it.
 Open the project in Android Studio.
