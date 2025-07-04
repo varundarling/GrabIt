@@ -49,7 +49,7 @@ Usage
 
 Tap the "+" button to add a new item (enter name, quantity, price).
 Check the box to mark items as purchased.
-Swipe left or tap "Delete" to remove items.
+Tap "Delete" to remove items.
 View your total spending at the bottom of the list.
 Enjoy a seamless shopping experience with a modern UI!
 
