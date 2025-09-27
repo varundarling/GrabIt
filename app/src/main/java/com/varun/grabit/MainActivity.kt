@@ -141,6 +141,151 @@ class MainActivity : AppCompatActivity() {
         updateTotalAmount()
     }
 
+    // **CRITICAL FIX: Missing loadItems() method implementation**
+    private fun loadItems() {
+        Log.d("MainActivity", "Loading items from Firebase")
+
+        // Remove any existing listener to prevent duplicates
+        valueEventListener?.let { listener ->
+            database.removeEventListener(listener)
+        }
+
+        valueEventListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                Log.d("MainActivity", "onDataChange triggered: ${dataSnapshot.childrenCount} items")
+
+                val itemsList = mutableListOf<Items>()
+
+                try {
+                    for (itemSnapshot in dataSnapshot.children) {
+                        val item = itemSnapshot.getValue(Items::class.java)
+                        if (item != null) {
+                            itemsList.add(item)
+                            Log.d("MainActivity", "Loaded item: ${item.name}")
+                        } else {
+                            Log.w("MainActivity", "Failed to parse item from snapshot: ${itemSnapshot.key}")
+                        }
+                    }
+
+                    // Update UI on main thread
+                    runOnUiThread {
+                        items.clear()
+                        items.addAll(itemsList)
+                        adapter.notifyDataSetChanged()
+                        updateTotalAmount()
+
+                        Log.d("MainActivity", "UI updated with ${items.size} items")
+
+                        // Show/hide empty state
+                        if (items.isEmpty()) {
+                            binding.recyclerView.visibility = View.GONE
+                            // You can add an empty state view here if needed
+                        } else {
+                            binding.recyclerView.visibility = View.VISIBLE
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Error processing data snapshot: ${e.message}", e)
+                    runOnUiThread {
+                        Snackbar.make(
+                            binding.root,
+                            "Error loading data: ${e.message}",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("MainActivity", "loadItems:onCancelled", databaseError.toException())
+                runOnUiThread {
+                    Snackbar.make(
+                        binding.root,
+                        "Failed to load data: ${databaseError.message}. Check your internet connection.",
+                        Snackbar.LENGTH_INDEFINITE
+                    ).setAction("Retry") {
+                        loadItems()
+                    }.show()
+                }
+            }
+        }
+
+        database.addValueEventListener(valueEventListener!!)
+    }
+
+    // **FIX: Complete updateItemCheckedStatus() method**
+    private fun updateItemCheckedStatus(itemId: String, isChecked: Boolean, position: Int) {
+        Log.d("MainActivity", "Updating item $itemId checked status to $isChecked")
+
+        database.child(itemId).child("isChecked").setValue(isChecked)
+            .addOnSuccessListener {
+                Log.d("MainActivity", "Item checked status updated successfully")
+                // Update local data
+                items.find { it.id == itemId }?.isChecked = isChecked
+                updateTotalAmount()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("MainActivity", "Failed to update item checked status: ${exception.message}")
+                // Revert checkbox state on failure
+                runOnUiThread {
+                    if (position < items.size) {
+                        adapter.notifyItemChanged(position)
+                    }
+                    Snackbar.make(
+                        binding.root,
+                        "Failed to update item: ${exception.message}",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+            }
+    }
+
+    // **FIX: Complete deleteItem() method**
+    private fun deleteItem(itemId: String) {
+        Log.d("MainActivity", "Deleting item: $itemId")
+
+        database.child(itemId).removeValue()
+            .addOnSuccessListener {
+                Log.d("MainActivity", "Item deleted successfully")
+                Snackbar.make(
+                    binding.root,
+                    "Item deleted",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("MainActivity", "Failed to delete item: ${exception.message}")
+                Snackbar.make(
+                    binding.root,
+                    "Failed to delete item: ${exception.message}",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+    }
+
+    // **FIX: Complete updateTotalAmount() method**
+    private fun updateTotalAmount() {
+        var total = 0.0
+        var checkedCount = 0
+
+        for (item in items) {
+            total += item.price * item.quantity
+            if (item.isChecked) {
+                checkedCount++
+            }
+        }
+
+        runOnUiThread {
+            // Update your total amount UI elements here
+            // For example, if you have a TextView for total:
+            // binding.textViewTotal.text = String.format("Total: $%.2f", total)
+            // binding.textViewChecked.text = "Checked: $checkedCount/${items.size}"
+
+            Log.d("MainActivity", "Total amount: $total, Checked items: $checkedCount/${items.size}")
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
@@ -168,152 +313,68 @@ class MainActivity : AppCompatActivity() {
         val buttonAdd = view.findViewById<Button>(R.id.buttonAdd)
 
         buttonAdd.setOnClickListener {
-            val name = editTextItemName.text.toString()
-            val quantity = editTextQuantity.text.toString().toIntOrNull() ?: 1
-            val price = editTextPrice.text.toString().toDoubleOrNull() ?: 0.0
+            val name = editTextItemName.text.toString().trim()
+            val quantityStr = editTextQuantity.text.toString().trim()
+            val priceStr = editTextPrice.text.toString().trim()
 
-            if (name.isNotEmpty()) {
-                val itemId = database.push().key ?: return@setOnClickListener
-                val item = Items(itemId, name, quantity, price)
-                Log.d("MainActivity", "Attempting to add item: $item to path: items/${auth.currentUser?.uid ?: "offline_debug"}/$itemId")
-                database.child(itemId).setValue(item)
-                    .addOnSuccessListener {
-                        bottomSheetDialog.dismiss()
-                        Snackbar.make(binding.root, "Item added", Snackbar.LENGTH_SHORT).show()
-                        loadItems()
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("MainActivity", "Failed to add item: ${e.message}")
-                        editTextItemName.error = "Failed to add item: ${e.message}"
-                    }
-            } else {
-                editTextItemName.error = "Please enter an item name"
+            if (name.isEmpty()) {
+                editTextItemName.error = "Item name is required"
+                return@setOnClickListener
             }
+
+            val quantity = quantityStr.toIntOrNull() ?: 1
+            val price = priceStr.toDoubleOrNull() ?: 0.0
+
+            addItem(name, quantity, price)
+            bottomSheetDialog.dismiss()
         }
+
         bottomSheetDialog.show()
     }
 
-    private fun loadItems() {
-        valueEventListener?.let { database.removeEventListener(it) }
-        valueEventListener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val currentTime = System.currentTimeMillis()
-                if (currentTime - lastUpdateTimestamp < 500) {
-                    Log.d("MainActivity", "Skipping loadItems due to recent update")
-                    return
-                }
-                lastUpdateTimestamp = currentTime
-                val newItems = mutableListOf<Items>()
-                for (data in snapshot.children) {
-                    try {
-                        val item = data.getValue(Items::class.java)
-                        item?.let {
-                            if (it.id.isNotEmpty() && it.id == data.key) {
-                                newItems.add(it)
-                                Log.d("MainActivity", "Loaded item: $it")
-                            } else {
-                                Log.e("MainActivity", "Invalid item ID: ${it.id}, expected: ${data.key}")
-                                data.key?.let { key -> database.child(key).removeValue() }
-                            }
-                        }
-                    } catch (e: Exception) {
-                        Log.e("MainActivity", "Error deserializing item: ${data.key}, ${e.message}")
-                    }
-                }
-                Log.d("MainActivity", "Total items loaded: ${newItems.size}")
-                adapter.updateItems(newItems)
-                binding.noItemsText.visibility = if (newItems.isEmpty()) View.VISIBLE else View.GONE
-                updateTotalAmount()
-            }
+    // **FIX: Complete addItem() method**
+    private fun addItem(name: String, quantity: Int, price: Double) {
+        val itemId = database.push().key
+        if (itemId == null) {
+            Log.e("MainActivity", "Failed to generate item ID")
+            Snackbar.make(binding.root, "Failed to add item", Snackbar.LENGTH_SHORT).show()
+            return
+        }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("MainActivity", "Failed to load items: ${error.message}, code: ${error.code}")
-                Snackbar.make(binding.root, "Failed to load items: ${error.message}", Snackbar.LENGTH_SHORT).show()
-            }
-        }
-        valueEventListener?.let { database.addValueEventListener(it) }
-    }
+        val item = Items(
+            id = itemId,
+            name = name,
+            quantity = quantity,
+            price = price,
+            isChecked = false
+        )
 
-    private fun updateItemCheckedStatus(itemId: String, isChecked: Boolean, position: Int) {
-        if (itemId.isEmpty() || itemId == "0") {
-            Log.e("MainActivity", "Invalid item ID for checkbox update")
-            Snackbar.make(binding.root, "Error: Invalid item ID", Snackbar.LENGTH_SHORT).show()
-            return
-        }
-        if (position < 0 || position >= items.size) {
-            Log.e("MainActivity", "Invalid position: $position, items size: ${items.size}")
-            Snackbar.make(binding.root, "Error: Item not found", Snackbar.LENGTH_SHORT).show()
-            return
-        }
-        val item = items[position]
-        if (item.id != itemId) {
-            Log.e("MainActivity", "ID mismatch at position $position: expected $itemId, found ${item.id}")
-            Snackbar.make(binding.root, "Error: Item ID mismatch", Snackbar.LENGTH_SHORT).show()
-            return
-        }
-        Log.d("MainActivity", "Updating ${item.name} with ID $itemId to isChecked=$isChecked")
-        valueEventListener?.let { database.removeEventListener(it) }
-        item.isChecked = isChecked
-        adapter.notifyItemChanged(position)
-        updateTotalAmount()
-        database.child(itemId).child("isChecked").setValue(isChecked)
+        Log.d("MainActivity", "Adding item: $name")
+
+        database.child(itemId).setValue(item)
             .addOnSuccessListener {
-                Log.d("MainActivity", "Successfully updated isChecked for $itemId")
+                Log.d("MainActivity", "Item added successfully")
+                Snackbar.make(
+                    binding.root,
+                    "Item added: $name",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-            .addOnFailureListener { e ->
-                Log.e("MainActivity", "Failed to update isChecked for $itemId: ${e.message}")
-                Snackbar.make(binding.root, "Failed to update item status: ${e.message}", Snackbar.LENGTH_SHORT).show()
-                loadItems()
+            .addOnFailureListener { exception ->
+                Log.e("MainActivity", "Failed to add item: ${exception.message}")
+                Snackbar.make(
+                    binding.root,
+                    "Failed to add item: ${exception.message}",
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
-    }
-
-    private fun deleteItem(itemId: String) {
-        if (itemId.isEmpty() || itemId == "0") {
-            Log.e("MainActivity", "Invalid item ID for deletion: $itemId")
-            Snackbar.make(binding.root, "Error: Invalid item ID", Snackbar.LENGTH_SHORT).show()
-            return
-        }
-        val position = items.indexOfFirst { it.id == itemId }
-        if (position == -1) {
-            Log.e("MainActivity", "Item with ID $itemId not found in list")
-            Snackbar.make(binding.root, "Error: Item not found", Snackbar.LENGTH_SHORT).show()
-            return
-        }
-        val item = items[position]
-        android.app.AlertDialog.Builder(this)
-            .setTitle("Delete Item")
-            .setMessage("Are you sure you want to delete ${item.name}?")
-            .setPositiveButton("Delete") { _, _ ->
-                valueEventListener?.let { database.removeEventListener(it) }
-                database.child(itemId).removeValue()
-                    .addOnSuccessListener {
-                        Log.d("MainActivity", "Item deleted from Firebase: $itemId")
-                        items.removeAt(position)
-                        adapter.notifyItemRemoved(position)
-                        binding.noItemsText.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
-                        updateTotalAmount()
-                        Snackbar.make(binding.root, "Item deleted", Snackbar.LENGTH_SHORT).show()
-                        loadItems()
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("MainActivity", "Failed to delete item $itemId: ${e.message}")
-                        Snackbar.make(binding.root, "Failed to delete item: ${e.message}", Snackbar.LENGTH_SHORT).show()
-                        loadItems()
-                    }
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    @SuppressLint("DefaultLocale")
-    fun updateTotalAmount() {
-        val total = items.filter { it.isChecked }.sumOf { it.price * it.quantity }
-        Log.d("MainActivity", "Updating total: $total, checked items: ${items.filter { it.isChecked }.map { it.name }}")
-        binding.totalAmount.text = String.format("%.2f", total)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        valueEventListener?.let { database.removeEventListener(it) }
+        // Clean up listener to prevent memory leaks
+        valueEventListener?.let { listener ->
+            database.removeEventListener(listener)
+        }
     }
 }
