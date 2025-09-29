@@ -29,9 +29,11 @@
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:contentDescription="@string/sample_text"
             android:src="@drawable/ic_add_shopping_cart"
             android:layout_marginEnd="12dp"
-            app:tint="@color/colorPrimary" />
+            app:tint="@color/colorPrimary"
+            />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -42,7 +44,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add New Item"
+                android:text="@string/add_new_item"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary" />
@@ -50,7 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fill in the details below"
+                android:text="@string/fill_details"
                 android:textSize="14sp"
                 android:textColor="@color/text_secondary"
                 android:layout_marginTop="2dp" />
@@ -133,7 +135,7 @@
                     android:maxLength="3"
                     android:textSize="16sp"
                     android:textColor="@color/text_primary"
-                    android:text="1" />
+                    android:text="@string/_1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -193,6 +195,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="12dp"
+                    android:contentDescription="@string/sample_text"
                     android:src="@drawable/ic_preview"
                     app:tint="@color/colorPrimary" />
 
@@ -205,7 +208,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Preview"
+                        android:text="@string/preview"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
 
@@ -214,7 +217,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Item Name × 1 = $0.00"
+                        android:text="@string/item_name_1_0_00"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />

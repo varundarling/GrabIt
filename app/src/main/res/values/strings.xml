@@ -53,4 +53,9 @@
     <string name="quick_select">Quick Select:</string>
     <string name="preview">Preview</string>
     <string name="add_to_list">Add to List</string>
+    <string name="sample_text">Sample Text</string>
+    <string name="_1">1</string>
+    <string name="item_name_1_0_00">Item Name × 1 = $0.00</string>
+    <string name="select_this_item">Select this item</string>
+    <string name="done">✓ DONE</string>
 </resources>

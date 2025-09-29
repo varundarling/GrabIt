@@ -11,6 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.varun.grabit"
         minSdk = 26
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 4
         versionName = "2.0.0"

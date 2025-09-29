@@ -24,7 +24,7 @@
             android:layout_height="28dp"
             android:layout_marginEnd="12dp"
             android:visibility="gone"
-            android:contentDescription="Select this item" />
+            android:contentDescription="@string/select_this_item" />
 
         <!-- Item Content -->
         <LinearLayout
@@ -56,7 +56,7 @@
                     android:id="@+id/completionBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="✓ DONE"
+                    android:text="@string/done"
                     android:textSize="10sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
@@ -65,7 +65,8 @@
                     android:paddingVertical="4dp"
                     android:layout_marginStart="8dp"
                     android:visibility="gone"
-                    tools:visibility="visible" />
+                    tools:visibility="visible"
+                    tools:ignore="SmallSp" />
 
             </LinearLayout>
 
@@ -111,7 +112,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="12dp"
             android:background="@drawable/delete_button_ripple"
-            android:contentDescription="Delete item"
+            android:contentDescription="@string/delete_item"
             android:src="@android:drawable/ic_menu_delete"
             app2:tint="@color/delete_primary" />
 

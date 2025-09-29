@@ -2,9 +2,7 @@ package com.varun.grabit
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -118,8 +116,8 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
         // Setup RecyclerView
         adapter = ItemAdapter(
             items = items,
-            onItemClick = { item, position -> handleItemClick(item, position) },
-            onItemLongClick = { item, position -> handleItemLongClick(item, position) },
+            onItemClick = { item, position -> handleItemClick(item) },
+            onItemLongClick = { item, position -> handleItemLongClick(item) },
             onDeleteClick = { item -> showDeleteConfirmation(item) },
             interactionListener = this
         )
@@ -316,7 +314,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
 
         // Show ad every 6 items
         if (itemsAddedCount % ITEMS_THRESHOLD_FOR_AD == 0) {
-            Log.d("GrabIt", "🎯 Reached ${ITEMS_THRESHOLD_FOR_AD} items threshold - Showing ad")
+            Log.d("GrabIt", "🎯 Reached $ITEMS_THRESHOLD_FOR_AD items threshold - Showing ad")
 
             // Randomly show either interstitial or rewarded ad
             val showRewardedAd = (0..1).random() == 1
@@ -348,12 +346,12 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
     }
 
     private fun authenticateAndConnect() {
-        binding.progressBar?.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.VISIBLE
 
         Log.d("GrabIt", "🔐 Authenticating...")
 
         auth.signInAnonymously().addOnCompleteListener { task ->
-            binding.progressBar?.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
 
             if (task.isSuccessful) {
                 val user = auth.currentUser
@@ -388,6 +386,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
         valueEventListener?.let { database.removeEventListener(it) }
 
         valueEventListener = object : ValueEventListener {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 val itemCount = snapshot.childrenCount.toInt()
                 Log.d("GrabIt", "📊 Firebase data changed: $itemCount items found")
@@ -410,7 +409,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
                 itemsList.sortWith(compareBy<Items> { it.isChecked }.thenBy { it.name })
 
                 runOnUiThread {
-                    binding.progressBar?.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
 
                     Log.d("GrabIt", "🔄 Updating UI with ${itemsList.size} items")
 
@@ -427,7 +426,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
                 Log.e("GrabIt", "❌ Database ERROR: ${error.message}")
 
                 runOnUiThread {
-                    binding.progressBar?.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
                     showSnackbar("❌ Database error: ${error.message}")
 
                     if (error.code == DatabaseError.PERMISSION_DENIED) {
@@ -444,6 +443,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
         Log.d("GrabIt", "👂 Firebase listener attached")
     }
 
+    @SuppressLint("SetTextI18n", "DefaultLocale")
     private fun updateUI() {
         val isEmpty = items.isEmpty()
         val itemCount = items.size
@@ -452,11 +452,11 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
 
         // Update visibility
         binding.recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
-        binding.noItemsText?.visibility = if (isEmpty) View.VISIBLE else View.GONE
-        binding.totalLayout?.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        binding.noItemsText.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        binding.totalLayout.visibility = if (isEmpty) View.GONE else View.VISIBLE
 
         // Update item count
-        binding.itemCount?.text = "$itemCount items"
+        binding.itemCount.text = "$itemCount items"
 
         // Calculate and update total
         var totalAmount = 0.0
@@ -464,13 +464,13 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
             totalAmount += item.price * item.quantity
         }
 
-        binding.totalAmount?.text = "₹${String.format("%.2f", totalAmount)}"
+        binding.totalAmount.text = "₹${String.format("%.2f", totalAmount)}"
 
         Log.d("GrabIt", "💰 Updated - Count: $itemCount, Total: ₹$totalAmount")
     }
 
     // Item Operations
-    private fun handleItemClick(item: Items, position: Int) {
+    private fun handleItemClick(item: Items) {
         if (isSelectionMode) {
             toggleItemSelection(item.id)
         } else {
@@ -480,7 +480,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
         }
     }
 
-    private fun handleItemLongClick(item: Items, position: Int): Boolean {
+    private fun handleItemLongClick(item: Items): Boolean {
         if (!isSelectionMode) {
             startSelectionMode()
             toggleItemSelection(item.id)
@@ -785,6 +785,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemInteractionListener 
         }
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
         if (isSelectionMode) {
             exitSelectionMode()

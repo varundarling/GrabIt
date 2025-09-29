@@ -37,7 +37,7 @@ class ItemAdapter(
         private val completionBadge: TextView? = itemView.findViewById(R.id.completionBadge)
         private val selectionCheckbox: ImageView = itemView.findViewById(R.id.selectionCheckBox)
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint("SetTextI18n", "DefaultLocale")
         fun bind(item: Items, position: Int) {
             textItemName.text = item.name
             textQuantity.text = "Qty: ${item.quantity}"
@@ -93,6 +93,7 @@ class ItemAdapter(
             }
         }
 
+        @SuppressLint("SetTextI18n")
         private fun setupNormalMode(item: Items) {
             selectionCheckbox.visibility = View.GONE
             buttonDelete.visibility = View.VISIBLE
