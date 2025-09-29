@@ -1,5 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Price Colors -->
+    <color name="price_color">#4CAF50</color>
+    <color name="price_highlight">#2E7D32</color>
+
+    <!-- Status Colors -->
+    <color name="success_green">#4CAF50</color>
+    <color name="error_red">#F44336</color>
+    <color name="warning_orange">#FF9800</color>
+    <color name="info_blue">#2196F3</color>
+    <color name="pending_orange">#FF9800</color>
+
+    <!-- Delete Colors -->
+    <color name="delete_color">#F44336</color>
+
+    <!-- Background Colors -->
+    <color name="divider_color">#E0E0E0</color>
+    <color name="progress_track">#E0E0E0</color>
+
+    <!-- FAB Colors -->
+    <color name="fab_color">#FF6B35</color>
+<!-- Original Blue & White Theme -->
+<color name="colorPrimary">#2196F3</color>
+<color name="colorPrimaryDark">#1976D2</color>
+<color name="colorAccent">#2196F3</color>
+
+<!-- Selection Colors -->
+<color name="selection_primary">#2196F3</color>
+<color name="selection_background">#E3F2FD</color>
+<color name="selection_border">#1976D2</color>
+
+<!-- Text Colors -->
+<color name="text_primary">#212121</color>
+<color name="text_secondary">#757575</color>
+<color name="text_completed">#9E9E9E</color>
+
+<!-- Price Colors (Green for money) -->
+<color name="price_primary">#4CAF50</color>
+<color name="price_background">#E8F5E8</color>
+
+<!-- Delete Colors (Red) -->
+<color name="delete_primary">#F44336</color>
+<color name="delete_background">#FFEBEE</color>
+
+<!-- Background Colors -->
+<color name="total_background">#FFFFFF</color>
+<color name="app_background">#FAFAFA</color>
 </resources>
+

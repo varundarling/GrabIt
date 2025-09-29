@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- First check mark -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9,7L7,5l-1.5,1.5L9,10l6,-6L13.5,2.5z"/>
+
+    <!-- Second check mark -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9,16L7,14l-1.5,1.5L9,19l6,-6L13.5,11.5z"/>
+</vector>

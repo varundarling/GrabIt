@@ -1,112 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/holo_blue_light"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toBottomOf="@+id/bannerAdView"
-        app:title="GrabIt"
-        app:titleTextColor="@color/white"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/bannerAdView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-7339218345159620/6637267327"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="46dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/your_items"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <TextView
-        android:id="@+id/noItemsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_items_added"
-        android:textSize="18sp"
-        android:textColor="?attr/colorPrimary"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/recyclerView"
-        app:layout_constraintEnd_toEndOf="@id/recyclerView"
-        app:layout_constraintStart_toStartOf="@id/recyclerView"
-        app:layout_constraintTop_toTopOf="@id/recyclerView" />
-
-    <!-- Total Amount Bar -->
-    <LinearLayout
-        android:id="@+id/totalLayout"
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#E0E0E0"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:elevation="4dp">
 
-        <TextView
-            android:id="@+id/totalLabel"
-            android:layout_width="0dp"
+        <!-- Banner Ad -->
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/bannerAdView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:text="@string/total_amount"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:background="#FFFFFF"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-7339218345159620/6637267327" />
 
-        <TextView
-            android:id="@+id/totalAmount"
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#2196F3"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:title="GrabIt Shopping"
+            app:titleTextColor="@android:color/white" />
+
+        <!-- CUSTOM SELECTION BAR - Below the ad and toolbar -->
+        <LinearLayout
+            android:id="@+id/selectionBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:background="#1976D2"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:visibility="gone"
+            android:elevation="2dp">
+
+            <!-- Selection Count Text -->
+            <TextView
+                android:id="@+id/selectionTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0 items selected"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Select All Button -->
+            <ImageButton
+                android:id="@+id/btnSelectAll"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Select All"
+                android:src="@drawable/ic_select_all_arrows"
+                android:layout_marginEnd="8dp"
+                app:tint="@android:color/white" />
+
+            <!-- Delete Button -->
+            <ImageButton
+                android:id="@+id/btnDeleteSelected"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Delete Selected"
+                android:src="@android:drawable/ic_menu_delete"
+                android:layout_marginEnd="8dp"
+                app:tint="@android:color/white" />
+
+            <!-- Close Selection Mode Button -->
+            <ImageButton
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Close Selection"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@android:color/white" />
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/_0_00"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Floating Action Button for Adding Items -->
+        <!-- Header with Item Count -->
+        <LinearLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="#FFFFFF"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Your Shopping List"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+
+            <TextView
+                android:id="@+id/itemCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 items"
+                android:textSize="16sp"
+                android:textColor="#757575"
+                android:background="@drawable/item_count_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                tools:text="5 items" />
+
+        </LinearLayout>
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clipToPadding="false"
+            android:paddingBottom="100dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@+id/totalLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerLayout" />
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/noItemsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerView"
+            app:layout_constraintEnd_toEndOf="@id/recyclerView"
+            app:layout_constraintStart_toStartOf="@id/recyclerView"
+            app:layout_constraintTop_toTopOf="@id/recyclerView">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:alpha="0.5"
+                android:layout_marginBottom="16dp"
+                app:tint="#2196F3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your shopping list is empty!"
+                android:textSize="18sp"
+                android:textColor="#2196F3"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap + to add your first item"
+                android:textSize="14sp"
+                android:textColor="#757575"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Total Amount Bar -->
+        <LinearLayout
+            android:id="@+id/totalLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:background="#FFFFFF"
+            android:elevation="8dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total Amount"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#212121" />
+
+            <TextView
+                android:id="@+id/totalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/price_badge"
+                android:paddingHorizontal="26dp"
+                android:paddingVertical="8dp"
+                android:text="₹0.00"
+                android:textColor="#4CAF50"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_item"
+        android:contentDescription="Add Item"
         android:src="@android:drawable/ic_menu_add"
-        app:layout_constraintBottom_toTopOf="@+id/totalLayout"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:backgroundTint="#2196F3"
+        app:layout_anchor="@id/totalLayout"
+        app:layout_anchorGravity="top|end"
+        app:tint="@android:color/white" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

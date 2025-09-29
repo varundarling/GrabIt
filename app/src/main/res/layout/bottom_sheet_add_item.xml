@@ -1,78 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:background="@drawable/bottom_sheet_background"
+    android:paddingBottom="24dp">
 
-    <EditText
-        android:id="@+id/editItemName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:autofillHints="Name"
-        android:hint="@string/item_name"
-        android:inputType="text"
-        android:textSize="16sp"
-        android:background="@drawable/edittext_border"
-        android:padding="12dp"
-        android:contentDescription="@string/item_name"
-        android:backgroundTint="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+    <!-- Bottom Sheet Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bottom_sheet_handle" />
 
-    <EditText
-        android:id="@+id/editQuantity"
-        android:layout_width="0dp"
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:autofillHints="Quantity"
-        android:hint="@string/quantity"
-        android:inputType="number"
-        android:textSize="16sp"
-        android:background="@drawable/edittext_border"
-        android:padding="12dp"
-        android:contentDescription="@string/quantity"
-        android:backgroundTint="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editItemName"
-        tools:ignore="ContentDescription" />
-
-    <EditText
-        android:id="@+id/editPrice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:autofillHints="Price"
-        android:hint="@string/price"
-        android:inputType="numberDecimal"
-        android:textSize="16sp"
-        android:background="@drawable/edittext_border"
-        android:padding="12dp"
-        android:contentDescription="@string/price"
-        android:backgroundTint="?attr/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editQuantity"
-        tools:ignore="ContentDescription" />
-
-    <Button
-        android:id="@+id/buttonAdd"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:paddingHorizontal="24dp"
-        android:paddingVertical="12dp"
-        android:text="@string/add"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#1976D2"
-        android:contentDescription="@string/add_item_to_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editPrice" />
+        android:paddingBottom="20dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_add_shopping_cart"
+            android:layout_marginEnd="12dp"
+            app:tint="@color/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add New Item"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fill in the details below"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Form Container -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp">
+
+        <!-- Item Name Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputLayoutName"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/item_name"
+            android:textColorHint="@color/text_primary"
+            app:startIconDrawable="@drawable/ic_shopping_bag"
+            app:startIconTint="@color/colorPrimary"
+            app:boxStrokeColor="@color/colorPrimary"
+            app:hintTextColor="@color/text_primary"
+            app:placeholderTextColor="@color/text_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="itemName"
+                android:inputType="textCapWords"
+                android:maxLength="50"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Quantity and Price Row -->
+        <LinearLayout
+            android:id="@+id/quantityPriceRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputLayoutName">
+
+            <!-- Quantity Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutQuantity"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/quantity"
+                android:textColorHint="@color/text_primary"
+                app:startIconDrawable="@drawable/ic_numbers"
+                app:startIconTint="@color/colorPrimary"
+                app:boxStrokeColor="@color/colorPrimary"
+                app:hintTextColor="@color/text_primary"
+                app:placeholderTextColor="@color/text_secondary"
+                app:suffixText="pcs"
+                app:suffixTextColor="@color/text_secondary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="quantity"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:text="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Price Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutPrice"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:layout_marginStart="8dp"
+                android:hint="@string/price"
+                android:textColorHint="@color/text_primary"
+                app:startIconTint="@color/price_primary"
+                app:boxStrokeColor="@color/price_background"
+                app:hintTextColor="@color/text_primary"
+                app:placeholderTextColor="@color/text_secondary"
+                app:prefixText="₹"
+                app:prefixTextColor="@color/price_primary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="price"
+                    android:inputType="numberDecimal"
+                    android:maxLength="8"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- Preview Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/previewCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="#F8F9FA"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quantityPriceRow">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_preview"
+                    app:tint="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Preview"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/previewText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Item Name × 1 = $0.00"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/previewCard">
+
+            <!-- Cancel Button -->
+
+            <!-- Add Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonAdd"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="12dp"
+                android:text="@string/add_to_list"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/colorPrimary"
+                app:cornerRadius="8dp"
+                app:icon="@drawable/ic_add"
+                app:iconTint="@android:color/white" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
