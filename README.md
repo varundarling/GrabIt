@@ -17,7 +17,7 @@ Android Studio (for developers) or Google Play Store (for users).
 
 Steps to Download and Use
 
-Via Google Play Store (Recommended for Users):
+Via Google Play Store (Recommended for Users): https://play.google.com/store/apps/details?id=com.varun.grabit&pcampaignid=web_share
 
 Open the Google Play Store on your Android device.
 Search for "GrabIt Shopping List".
