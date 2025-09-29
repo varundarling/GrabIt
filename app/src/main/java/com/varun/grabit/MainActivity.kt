@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private var valueEventListener: ValueEventListener? = null
-    private var lastUpdateTimestamp: Long = 0
     lateinit var binding: ActivityMainBinding
     private lateinit var mAdView1: AdView
 
@@ -99,25 +98,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupAuthentication() {
+        Log.d("MainActivity", "🔍 Checking anonymous auth availability")
+
         auth.signInAnonymously().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val uid = auth.currentUser?.uid
-                Log.d("MainActivity", "Anonymous auth successful, UID: $uid")
-                initializeDatabase(uid)
+                val user = auth.currentUser
+                Log.d("MainActivity", "✅ Anonymous auth successful")
+                Log.d("MainActivity", "User ID: ${user?.uid}")
+                Log.d("MainActivity", "Is Anonymous: ${user?.isAnonymous}")
+                Log.d("MainActivity", "Provider: ${user?.providerData?.firstOrNull()?.providerId}")
+                initializeDatabase(user?.uid)
             } else {
-                Log.e("MainActivity", "Anonymous auth failed: ${task.exception?.message}, code: ${task.exception?.let { it.cause?.toString() }}")
-                val snackbar = Snackbar.make(
-                    binding.root,
-                    "Authentication failed: ${task.exception?.message}. Check network or retry?",
-                    Snackbar.LENGTH_INDEFINITE
-                )
-                snackbar.setAction("Retry") { setupAuthentication() }
-                snackbar.show()
-                // Fallback to offline/debug mode
-                initializeDatabase("offline_debug") // Use for debugging only
+                Log.e("MainActivity", "❌ Anonymous auth failed: ${task.exception?.message}")
             }
         }
     }
+
 
     private fun initializeDatabase(userId: String?) {
         if (userId == null) {
