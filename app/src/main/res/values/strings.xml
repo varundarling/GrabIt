@@ -58,4 +58,5 @@
     <string name="item_name_1_0_00">Item Name × 1 = $0.00</string>
     <string name="select_this_item">Select this item</string>
     <string name="done">✓ DONE</string>
+    <string name="shopping_list_is_empty">Shopping list is empty..!</string>
 </resources>

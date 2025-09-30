@@ -63,7 +63,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Select All"
+                android:contentDescription="@string/select_all"
                 android:src="@drawable/ic_select_all_arrows"
                 android:layout_marginEnd="8dp"
                 app:tint="@android:color/white" />
@@ -74,7 +74,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Delete Selected"
+                android:contentDescription="@string/sample_text"
                 android:src="@android:drawable/ic_menu_delete"
                 android:layout_marginEnd="8dp"
                 app:tint="@android:color/white" />
@@ -85,7 +85,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Close Selection"
+                android:contentDescription="@string/sample_text"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
                 app:tint="@android:color/white" />
 
@@ -125,7 +125,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Your Shopping List"
+                android:text="@string/your_items"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#2196F3" />
@@ -134,13 +134,22 @@
                 android:id="@+id/itemCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 items"
+                android:text="@string/_0_items_in_your_list"
                 android:textSize="16sp"
                 android:textColor="#757575"
                 android:background="@drawable/item_count_background"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="6dp"
                 tools:text="5 items" />
+
+            <ImageButton
+                android:id="@+id/buttonAddItem"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/add_item"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="#2196F3" />
 
         </LinearLayout>
 
@@ -176,6 +185,7 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
+                android:contentDescription="@string/sample_text"
                 android:src="@android:drawable/ic_menu_agenda"
                 android:alpha="0.5"
                 android:layout_marginBottom="16dp"
@@ -184,7 +194,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your shopping list is empty!"
+                android:text="@string/shopping_list_is_empty"
                 android:textSize="18sp"
                 android:textColor="#2196F3"
                 android:textStyle="bold"
@@ -193,7 +203,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tap + to add your first item"
+                android:text="@string/tap_plus_to_add_items"
                 android:textSize="14sp"
                 android:textColor="#757575"
                 android:gravity="center" />
@@ -215,7 +225,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Total Amount"
+                android:text="@string/total_amount"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#212121" />
@@ -227,7 +237,7 @@
                 android:background="@drawable/price_badge"
                 android:paddingHorizontal="26dp"
                 android:paddingVertical="8dp"
-                android:text="₹0.00"
+                android:text="@string/_0_00"
                 android:textColor="#4CAF50"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -235,18 +245,5 @@
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Floating Action Button -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="Add Item"
-        android:src="@android:drawable/ic_menu_add"
-        android:backgroundTint="#2196F3"
-        app:layout_anchor="@id/totalLayout"
-        app:layout_anchorGravity="top|end"
-        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
