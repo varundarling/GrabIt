@@ -260,15 +260,27 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnInteractionListener {
 
         Log.d("GrabIt", "Items added count: $itemsAddedCount")
 
+        // Show ad every 3 items, but only if 4 minutes have passed since last ad
         if (itemsAddedCount % ITEMS_THRESHOLD_FOR_AD == 0) {
-            Log.d("GrabIt", "Reached $ITEMS_THRESHOLD_FOR_AD items threshold - Showing ad")
+            val now = System.currentTimeMillis()
+            val timeSinceLastAd = now - lastAdTime
+            val cooldownMillis = AD_COOLDOWN_MINUTES * 60 * 1000L // 4 minutes in milliseconds
 
-            val showRewardedAd = (0..1).random() == 1
+            if (timeSinceLastAd >= cooldownMillis) {
+                Log.d("GrabIt", "✅ Reached $ITEMS_THRESHOLD_FOR_AD items threshold AND cooldown satisfied - Showing ad")
+                Log.d("GrabIt", "⏰ Time since last ad: ${timeSinceLastAd / 60000} minutes")
 
-            if (showRewardedAd && rewardedAd != null) {
-                showRewardedAd("items_threshold")
+                // Randomly show either interstitial or rewarded ad
+                val showRewardedAd = (0..1).random() == 1
+
+                if (showRewardedAd && rewardedAd != null) {
+                    showRewardedAd("items_threshold")
+                } else {
+                    showInterstitialAd("items_threshold")
+                }
             } else {
-                showInterstitialAd("items_threshold")
+                val remainingCooldown = (cooldownMillis - timeSinceLastAd) / 60000
+                Log.d("GrabIt", "⏰ Ad cooldown active - $remainingCooldown minutes remaining")
             }
         }
     }
